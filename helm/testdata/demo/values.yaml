@@ -1,0 +1,2 @@
+deployment:
+  replicaCount: 2

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-{{ .Release.Name }}
+spec:
+  replicas: {{ .Values.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      app: server-{{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: server-{{ .Release.Name }}
+    spec:
+      containers:
+        - name: echo-server
+          image: hashicorp/http-echo
+          args: 
+           - '-text'
+           - '"helloworld"'
+          ports:
+            - name: http-port
+              containerPort: 5678

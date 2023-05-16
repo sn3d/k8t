@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: list-test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: list-test
+  template:
+    metadata:
+      labels:
+        app: list-test
+    spec:
+      containers:
+        - name: echo-server
+          image: hashicorp/http-echo
+          args: 
+           - '-text'
+           - '"helloworld"'
+          ports:
+            - name: http-port
+              containerPort: 5678
