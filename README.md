@@ -48,14 +48,7 @@ Following example apply the manifest `manifests/busybox.yaml`, check if busybox
 pod is running and at the end, delete the pod:
 
 ```
-import (
-   "github.com/sn3d/k8t"
-   _ "embed"
-)
-
-
-//go:embed manifests/busybox.yaml
-var busyboxYAML string
+import "github.com/sn3d/k8t"
 
 func Test_Simple(t *testing.T) {
    
