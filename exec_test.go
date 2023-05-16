@@ -6,11 +6,9 @@ import (
 	"testing"
 
 	"github.com/sn3d/k8t"
-	testdata "github.com/sn3d/tdata"
 )
 
 func Test_Exec(t *testing.T) {
-	testdata.InitTestdata()
 
 	if os.Getenv("KUBECONFIG") == "" {
 		t.Skip("No KUBECONFIG defined")
@@ -22,7 +20,7 @@ func Test_Exec(t *testing.T) {
 		t.FailNow()
 	}
 
-	err = cluster.Apply(testdata.ReadStr("test-agent.yaml"))
+	err = cluster.ApplyFile("testdata/test-agent.yaml")
 	if err != nil {
 		t.FailNow()
 	}

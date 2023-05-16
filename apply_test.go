@@ -5,11 +5,9 @@ import (
 	"testing"
 
 	"github.com/sn3d/k8t"
-	testdata "github.com/sn3d/tdata"
 )
 
 func Test_Apply(t *testing.T) {
-	testdata.InitTestdata()
 	if os.Getenv("KUBECONFIG") == "" {
 		t.Skip("No KUBECONFIG defined")
 	}
@@ -21,7 +19,7 @@ func Test_Apply(t *testing.T) {
 	}
 
 	// WHEN: I apply simple pod manifest
-	err = cluster.Apply(testdata.ReadStr("simple-pod.yaml"))
+	err = cluster.ApplyFile("testdata/simple-pod.yaml")
 
 	// THEN: apply must end with no error
 	if err != nil {

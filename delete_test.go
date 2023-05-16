@@ -5,13 +5,9 @@ import (
 	"testing"
 
 	"github.com/sn3d/k8t"
-	testdata "github.com/sn3d/tdata"
 )
 
 func Test_Delete(t *testing.T) {
-
-	testdata.InitTestdata()
-	var deleteTestManifest = testdata.ReadStr("delete-test.yaml")
 
 	if os.Getenv("KUBECONFIG") == "" {
 		t.Skip("No KUBECONFIG defined")
@@ -24,7 +20,7 @@ func Test_Delete(t *testing.T) {
 	}
 
 	// AND: exist service to-be-deleted in cluster
-	err = cluster.Apply(deleteTestManifest)
+	err = cluster.ApplyFile("testdata/delete-test.yaml")
 	if err != nil {
 		t.FailNow()
 	}
@@ -35,7 +31,7 @@ func Test_Delete(t *testing.T) {
 	}
 
 	// WHEN: we delete the service
-	err = cluster.Delete(deleteTestManifest)
+	err = cluster.DeleteFile("testdata/delete-test.yaml")
 	if err != nil {
 		t.FailNow()
 	}

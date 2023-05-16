@@ -2,6 +2,7 @@ package k8t
 
 import (
 	"context"
+	"io/ioutil"
 
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -22,6 +23,16 @@ type DeleteOpts struct {
 	// namespace where delete resource. If it's not set, the cluster's
 	// test namespace will be used. This is ignored for cluster-wide resources
 	Namespace string
+}
+
+// Delete resource in given file
+func (c *Cluster) DeleteFile(path string) error {
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	return c.Delete(string(data))
+
 }
 
 // Delete resource of given YAML. The resource must be located in

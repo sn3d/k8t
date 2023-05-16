@@ -3,6 +3,7 @@ package k8t
 import (
 	"context"
 	"encoding/json"
+	"io/ioutil"
 
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -26,7 +27,16 @@ type ApplyOpts struct {
 	Namespace string
 }
 
-// Same as kubectl apply. Function apply any YAML string into given cluster,
+// Apply manifest on given path
+func (c *Cluster) ApplyFile(path string) error {
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	return c.Apply(string(data))
+}
+
+// Same as kubectl apply. Function apply any YAML into given cluster,
 // into default test namespace.
 func (c *Cluster) Apply(yml string) error {
 	return c.ApplyWithOpts(yml, ApplyOpts{})

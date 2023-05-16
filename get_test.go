@@ -5,11 +5,9 @@ import (
 	"testing"
 
 	"github.com/sn3d/k8t"
-	testdata "github.com/sn3d/tdata"
 )
 
 func Test_Get(t *testing.T) {
-	testdata.InitTestdata()
 	if os.Getenv("KUBECONFIG") == "" {
 		t.Skip("No KUBECONFIG defined")
 	}
@@ -21,7 +19,7 @@ func Test_Get(t *testing.T) {
 	}
 
 	// AND: deployed some test service
-	err = cluster.Apply(testdata.ReadStr("simple-service.yaml"))
+	err = cluster.ApplyFile("testdata/simple-service.yaml")
 	if err != nil {
 		t.Fail()
 	}
