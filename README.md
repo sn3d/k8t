@@ -57,13 +57,13 @@ import (
 //go:embed manifests/busybox.yaml
 var busyboxYAML string
 
-func main() {
+func Test_Simple(t *testing.T) {
    
    // get the instance for tested cluster (from KUBECONFIG)
    cluster,_ := k8t.NewFromEnvironment()
 
    // apply manifest
-   cluster.Apply(busyboxYAML)
+   cluster.ApplyFile("testdata/busybox.yaml")
 
    // wait until pod is running
    err := cluster.WaitFor(k8t.PodIsRunning("","busybox-pod"))
@@ -72,6 +72,6 @@ func main() {
    }
 
    // delete the applied pod
-   cluster.Delete(busyboxYAML)
+   cluster.DeleteFile("testdata/busybox.yaml")
 }
 ```
