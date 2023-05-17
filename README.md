@@ -50,20 +50,19 @@ Here's an example that applies the `testdata/busybox.yaml` manifest, verifies
 if the busybox pod is running, and finally deletes the pod:
 
 ```go
-   // get the instance for tested cluster (from KUBECONFIG)
-   cluster,_ := k8t.NewFromEnvironment()
+// get the instance for tested cluster (from KUBECONFIG)
+cluster,_ := k8t.NewFromEnvironment()
 
-   // apply the manifest
-   cluster.ApplyFile("testdata/busybox.yaml")
+// apply the manifest
+cluster.ApplyFile("testdata/busybox.yaml")
 
-   // check if pod is running
-   err := cluster.WaitFor(k8t.PodIsRunning("","busybox-pod"))
-   if err != nil {
-      panic("Pod is not running")
-   }
-
-   cluster.DeleteFile("testdata/busybox.yaml")
+// check if pod is running
+err := cluster.WaitFor(k8t.PodIsRunning("","busybox-pod"))
+if err != nil {
+   panic("Pod is not running")
 }
+
+cluster.DeleteFile("testdata/busybox.yaml")
 ```
 
 ### Execute command inside cluster
@@ -78,14 +77,14 @@ functioning of DNS or other network components, check storage, and perform
 various other tests.
 
 ```go
-   // execute the command and get the result
-   result := cluster.Execf("busybox", "busybox-container", "nslookup %s", "google.com")
+// execute the command and get the result
+result := cluster.Execf("busybox", "busybox-container", "nslookup %s", "google.com")
 
-   if result.Err != nil {
-      panic("cannot execute command")
-   }
+if result.Err != nil {
+   panic("cannot execute command")
+}
 
-   fmt.Printf(result.String())
+fmt.Printf(result.String())
 }
 ```
 
@@ -110,21 +109,20 @@ install. We also want to customize certain values, such as
 `deployment.replicaCount`. Here's an example code snippet to accomplish this:
 
 ```go
-   // get the instance for tested cluster (from KUBECONFIG)
-   cluster,_ := k8t.NewFromEnvironment()
+// get the instance for tested cluster (from KUBECONFIG)
+cluster,_ := k8t.NewFromEnvironment()
 
-   // set values for Helm release
-   vals := helm.Value{
-		"deployment": helm.Value{
-			"replicaCount": 3,
-		},
-	}
+// set values for Helm release
+vals := helm.Value{
+   "deployment": helm.Value{
+      "replicaCount": 3,
+   },
+}
 
-   // install helm chart with values
-   err := helm.Install(cluster, "testdata/my-helm", vals)
-   if err != nil {
-      panic("chart cannot be installed")
-   }
+// install helm chart with values
+err := helm.Install(cluster, "testdata/my-helm", vals)
+if err != nil {
+   panic("chart cannot be installed")
 }
 ```
 
@@ -136,11 +134,11 @@ testing capabilities into your Ginkgo test suite.
 
 ```go
 var _ = Describe("My firt K8T test", func() {
-	var cluster *k8t.Cluster
+   var cluster *k8t.Cluster
 
-	BeforeEach(func() {
+   BeforeEach(func() {
       cluster,_ := k8t.NewFromEnvironment()
-	})
+   })
 
    It("should apply manifest", func() {
       err := cluster.ApplyFile("testdata/my-manifest.yaml")
