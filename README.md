@@ -127,3 +127,29 @@ install. We also want to customize certain values, such as
    }
 }
 ```
+
+### Using K8T with Ginkgo/Gomega
+
+One of its notable features is its seamless integration with Ginkgo, a popular 
+BDD testing framework. With K8T, you can effortlessly incorporate Kubernetes 
+testing capabilities into your Ginkgo test suite.
+
+```
+var _ = Describe("My firt K8T test", func() {
+	var cluster *k8t.Cluster
+
+	BeforeEach(func() {
+      cluster,_ := k8t.NewFromEnvironment()
+	})
+
+   It("should apply manifest", func() {
+      err := cluster.ApplyFile("testdata/my-manifest.yaml")
+      Expect(err).NotTo(HaveOccurred())
+   })
+}
+```
+
+## Feedback & Bugs
+
+Feedback is more than welcome. Did you found a bug? Is something not behaving 
+as expected? Feature or bug, feel free to create [issue](https://github.com/sn3d/kconf/issues).
