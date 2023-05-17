@@ -133,7 +133,7 @@ BDD testing framework. With K8T, you can effortlessly incorporate Kubernetes
 testing capabilities into your Ginkgo test suite.
 
 ```go
-var _ = Describe("My firt K8T test", func() {
+var _ = Describe("My first K8T test", func() {
    var cluster *k8t.Cluster
 
    BeforeEach(func() {
