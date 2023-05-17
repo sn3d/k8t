@@ -18,18 +18,21 @@ The K8T's vision is to:
 
 ## Motivation
 
-
 E2E testing for Kubernetes can be challenging and requires writing a lot of 
-code. Although there is the e2s-kubernetes framework available, my main issue 
-with it is that it aims to be a test framework.
+code. Personally, I prefer using BDD-style E2E testing, and I'm satisfied with 
+what Ginkgo/Gomega or GoDog offer.
 
-Personally, I prefer using BDD-style E2E testing, and I'm satisfied with 
-what Ginkgo/Gomega or GoDog offer in that regard.
+Although there is the e2s-kubernetes framework available, my main issue 
+with it is that it aims to be a test framework itself. Also simplicity is 
+questionable. 
+
+Another option is to use Go client directly. The Go client for Kubernetes 
+is a low-level tool that can be challenging to use directly in e2e testing 
+scenarios.
 
 What I really desire is a simple collection of high-level functions that can 
 seamlessly integrate with my preferred BDD-like framework, traditional unit 
 tests, or even enable me to build my own testing CLI (similar to cilium connectivity test).
-
 
 ## Getting started
 
