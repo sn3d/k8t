@@ -1,4 +1,4 @@
-# K8T - your kit for e2e Kubernetes testing
+# K8T: Your Kit for E2E Kubernetes Testing
 [![Go Report Card](https://goreportcard.com/badge/github.com/sn3d/k8t)](https://goreportcard.com/report/github.com/sn3d/k8t)
 [![Go Reference](https://pkg.go.dev/badge/github.com/sn3d/k8t.svg)](https://pkg.go.dev/github.com/sn3d/k8t)
 
