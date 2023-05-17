@@ -1,9 +1,9 @@
 # K8T - your kit for e2e Kubernetes testing
 
-The goal of this project is provide hi-level easy-to-use functions you can 
-use for e2e testing of Kubernetes.
 
-The vision of this kit is:
+The project's goal is to offer high-level, user-friendly functions for 
+e2e testing of Kubernetes. 
+The K8T's vision is to:
 
  - provide hi-level easy-to use functions for Kubernetes testing
  - focus on simplicity
@@ -18,53 +18,112 @@ The vision of this kit is:
 
 ## Motivation
 
-Doing E2E testing for Kubernetes isn't easy. It require lot of code. Yes, 
-there is e2s-kubernetes framework. My main problem with this framework it
-want to be test framework. 
 
-I don't want to use yet-another test framework. TBH I'm very happy with BDD 
-style of E2E testing. I'm happy what Ginkgo/Gomega or GoDog are doing. 
+E2E testing for Kubernetes can be challenging and requires writing a lot of 
+code. Although there is the e2s-kubernetes framework available, my main issue 
+with it is that it aims to be a test framework.
 
-What I wish to have is just set of super-simple hi-level functions I can use 
-in my fawourite BDD-like framework, or classy unit-tests, or just build
-own CLI that will do testing (e.g. like `cilium connectivity test`).
+Personally, I prefer using BDD-style E2E testing, and I'm satisfied with 
+what Ginkgo/Gomega or GoDog offer in that regard.
+
+What I really desire is a simple collection of high-level functions that can 
+seamlessly integrate with my preferred BDD-like framework, traditional unit 
+tests, or even enable me to build my own testing CLI (similar to cilium connectivity test).
+
 
 ## Getting started
 
-The K8T is simple Go module, thus could be integrated directly in your 
-tests. Simply pull the K8T Go module:
+The K8T is a straightforward Go module that can be directly integrated into 
+your tests. Just fetch the K8T Go module by executing the following command:
 
 ```
 go get sn3d.com/sn3d/k8t
 ```
 
 ### Apply and delete resource from manifest
+The module relies on a cluster instance that provides essential functions 
+such as `Apply()`, `Get()`, `List()`, and `Delete()`. Additionally, the 
+cluster instance includes a `WaitFor()` function that can be used with 
+different checking functions.
 
-The module relly on cluster instance which is offering you basic functions like
-`Apply()`, `Get()`, `List()` or `Delete()`. The cluster instance also offers you
-`WaitFor()` function that accept various checking functions.
-
-Following example apply the manifest `manifests/busybox.yaml`, check if busybox 
-pod is running and at the end, delete the pod:
+Here's an example that applies the `testdata/busybox.yaml` manifest, verifies 
+if the busybox pod is running, and finally deletes the pod:
 
 ```
-import "github.com/sn3d/k8t"
-
-func Test_Simple(t *testing.T) {
-   
    // get the instance for tested cluster (from KUBECONFIG)
    cluster,_ := k8t.NewFromEnvironment()
 
-   // apply manifest
+   // apply the manifest
    cluster.ApplyFile("testdata/busybox.yaml")
 
-   // wait until pod is running
+   // check if pod is running
    err := cluster.WaitFor(k8t.PodIsRunning("","busybox-pod"))
    if err != nil {
       panic("Pod is not running")
    }
 
-   // delete the applied pod
    cluster.DeleteFile("testdata/busybox.yaml")
+}
+```
+
+### Execute command inside cluster
+
+The K8T module provides the `Execf()` function as well as the more detailed 
+`ExecWithOpts()` function. These functions can be used when you need to 
+execute commands inside a specific container.
+
+Having the ability to execute commands from the test container within the 
+tested cluster is useful for E2E testing. It allows us to verify the proper
+functioning of DNS or other network components, check storage, and perform
+various other tests.
+
+```
+   // execute the command and get the result
+   result := cluster.Execf("busybox", "busybox-container", "nslookup %s", "google.com")
+
+   if result.Err != nil {
+      panic("cannot execute command")
+   }
+
+   fmt.Printf(result.String())
+}
+```
+
+The `Execf()` function is a straightforward execution function that accepts 
+arguments such as the pod name, container name, and command. The command can 
+be formatted using a syntax similar to `Printf()`. It's important to note 
+that the pod should be running in the default test namespace, and the 
+command is executed with the `/bin/sh` shell.
+
+If you require additional control over the execution, you can use the 
+`ExecWithOpts()` function. This function allows you to modify the namespace 
+and provides more options for customization.
+
+### Installing Helm charts
+
+K8T also provides support for installing Helm charts.
+
+Helm is extensively used in the Kubernetes ecosystem, and for E2E testing 
+scenarios, it's often necessary to install components using Helm. Let's say 
+we have a Helm chart located in the testdata/my-helm folder that we want to 
+install. We also want to customize certain values, such as 
+`deployment.replicaCount`. Here's an example code snippet to accomplish this:
+
+```
+   // get the instance for tested cluster (from KUBECONFIG)
+   cluster,_ := k8t.NewFromEnvironment()
+
+   // set values for Helm release
+   vals := helm.Value{
+		"deployment": helm.Value{
+			"replicaCount": 3,
+		},
+	}
+
+   // install helm chart with values
+   err := helm.Install(cluster, "testdata/my-helm", vals)
+   if err != nil {
+      panic("chart cannot be installed")
+   }
 }
 ```
