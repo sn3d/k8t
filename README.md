@@ -36,7 +36,7 @@ tests, or even enable me to build my own testing CLI (similar to cilium connecti
 The K8T is a straightforward Go module that can be directly integrated into 
 your tests. Just fetch the K8T Go module by executing the following command:
 
-```
+```shell
 go get sn3d.com/sn3d/k8t
 ```
 
@@ -49,7 +49,7 @@ different checking functions.
 Here's an example that applies the `testdata/busybox.yaml` manifest, verifies 
 if the busybox pod is running, and finally deletes the pod:
 
-```
+```go
    // get the instance for tested cluster (from KUBECONFIG)
    cluster,_ := k8t.NewFromEnvironment()
 
@@ -77,7 +77,7 @@ tested cluster is useful for E2E testing. It allows us to verify the proper
 functioning of DNS or other network components, check storage, and perform
 various other tests.
 
-```
+```go
    // execute the command and get the result
    result := cluster.Execf("busybox", "busybox-container", "nslookup %s", "google.com")
 
@@ -109,7 +109,7 @@ we have a Helm chart located in the testdata/my-helm folder that we want to
 install. We also want to customize certain values, such as 
 `deployment.replicaCount`. Here's an example code snippet to accomplish this:
 
-```
+```go
    // get the instance for tested cluster (from KUBECONFIG)
    cluster,_ := k8t.NewFromEnvironment()
 
@@ -134,7 +134,7 @@ One of its notable features is its seamless integration with Ginkgo, a popular
 BDD testing framework. With K8T, you can effortlessly incorporate Kubernetes 
 testing capabilities into your Ginkgo test suite.
 
-```
+```go
 var _ = Describe("My firt K8T test", func() {
 	var cluster *k8t.Cluster
 
