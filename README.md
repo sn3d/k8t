@@ -85,7 +85,6 @@ if result.Err != nil {
 }
 
 fmt.Printf(result.String())
-}
 ```
 
 The `Execf()` function is a straightforward execution function that accepts 
